@@ -24,6 +24,7 @@
     <string name="balanced">Balanced</string>
     <string name="generate_teams">Generate teams</string>
     <string name="delete_all_teams">Delete all teams</string>
+    <string name="delete_student">Delete student</string>
     <string name="empty_students">No students added yet.</string>
     <string name="empty_teams">No teams generated yet.</string>
 </resources>

@@ -65,6 +65,10 @@ public class ProjectViewModel extends AndroidViewModel {
         repository.deleteAllTeams();
     }
 
+    public void deleteStudent(String userId) {
+        repository.deleteStudent(userId);
+    }
+
     @Override
     protected void onCleared() {
         repository.shutdown();

@@ -59,6 +59,9 @@ public interface ProjectDao {
     @Query("DELETE FROM teams")
     void deleteAllTeams();
 
+    @Query("DELETE FROM users WHERE id = :userId")
+    void deleteUserById(String userId);
+
     @Transaction
     default void insertStudentProfile(UserEntity student, List<UserSkillEntity> skills) {
         insertUser(student);

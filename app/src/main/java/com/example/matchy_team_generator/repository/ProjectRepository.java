@@ -85,6 +85,10 @@ public class ProjectRepository {
         });
     }
 
+    public void deleteStudent(String userId) {
+        executorService.execute(() -> projectDao.deleteUserById(userId));
+    }
+
     public void shutdown() {
         executorService.shutdown();
     }

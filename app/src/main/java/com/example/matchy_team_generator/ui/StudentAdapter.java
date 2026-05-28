@@ -1,6 +1,7 @@
 package com.example.matchy_team_generator.ui;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,15 @@ import java.util.Map;
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder> {
     private final List<UserEntity> students = new ArrayList<>();
     private final Map<String, Map<String, Integer>> skillsByUser = new HashMap<>();
+    private final OnStudentDeleteClick deleteClick;
+
+    public StudentAdapter() {
+        this(null);
+    }
+
+    public StudentAdapter(OnStudentDeleteClick deleteClick) {
+        this.deleteClick = deleteClick;
+    }
 
     @NonNull
     @Override
@@ -33,6 +43,12 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         holder.binding.studentNameText.setText(student.name);
         holder.binding.studentEmailText.setText(student.email);
         holder.binding.studentSkillSummaryText.setText(skillSummary(student.id));
+        holder.binding.deleteStudentButton.setVisibility(deleteClick == null ? View.GONE : View.VISIBLE);
+        holder.binding.deleteStudentButton.setOnClickListener(v -> {
+            if (deleteClick != null) {
+                deleteClick.onDeleteStudent(student);
+            }
+        });
     }
 
     @Override
@@ -85,5 +101,9 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    public interface OnStudentDeleteClick {
+        void onDeleteStudent(UserEntity student);
     }
 }

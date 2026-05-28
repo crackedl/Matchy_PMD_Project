@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     private void observeData() {
         viewModel.students.observe(this, students -> {
             currentStudents = students == null ? new ArrayList<>() : students;
-            if (currentStudents.size() < 120 && !seedRequested) {
+            if (currentStudents.isEmpty() && !seedRequested) {
                 seedRequested = true;
                 viewModel.seedDemoStudents(120);
                 Toast.makeText(this, "Loading 120 demo students", Toast.LENGTH_SHORT).show();
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         content.addView(recyclerView, recyclerParams());
 
-        StudentAdapter dialogAdapter = new StudentAdapter();
+        StudentAdapter dialogAdapter = new StudentAdapter(this::requestStudentDeletion);
         recyclerView.setAdapter(dialogAdapter);
         dialogAdapter.submit(currentStudents, skillsByUser);
         searchInput.addTextChangedListener(simpleTextWatcher(text -> dialogAdapter.submit(filterStudents(text), skillsByUser)));
@@ -248,6 +248,23 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle(String.format(Locale.US, "All Students (%d)", currentStudents.size()))
                 .setView(content)
                 .setPositiveButton("Close", null)
+                .show();
+    }
+
+    private void requestStudentDeletion(UserEntity student) {
+        if (!currentTeams.isEmpty()) {
+            Toast.makeText(this, "Delete generated teams before deleting students", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Delete student?")
+                .setMessage("Delete " + student.name + " and their skill scores?")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    viewModel.deleteStudent(student.id);
+                    Toast.makeText(this, "Student deleted", Toast.LENGTH_SHORT).show();
+                })
                 .show();
     }
 

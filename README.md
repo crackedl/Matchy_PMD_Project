@@ -8,6 +8,7 @@ Android Studio Java application for a university software engineering project. T
 - Seed the app with 120 demo students and varied skill profiles.
 - Let the professor view a small sample of students on the dashboard.
 - Open a searchable popup to view all students and their skills.
+- Delete students from the full student popup when no teams are currently generated.
 - Generate teams by selected skill or overall average.
 - Open a searchable popup to view all generated teams.
 - Delete all generated teams.
@@ -120,7 +121,9 @@ Responsibilities:
 - Generates teams from professor settings.
 - Deletes generated teams.
 - Shows searchable popups for all students and all teams.
+- Allows student deletion from the full student popup only when generated teams are cleared.
 - Filters students by name, email, skill name, or skill score.
+- Blocks student deletion while teams exist, so generated memberships cannot become inconsistent.
 - Filters teams by team name, strategy, criteria, or member name/email.
 
 ### `ProjectViewModel.java`
@@ -412,6 +415,8 @@ The full student popup can search by:
 - Skill name.
 - Raw skill constant.
 - Skill score.
+
+The popup also includes a `Delete student` button for each student. A student can be deleted only when there are no generated teams. If teams exist, the professor must tap `Delete all teams` first.
 
 ### Team Popup Search
 
