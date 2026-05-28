@@ -66,8 +66,19 @@ public class ProjectRepository {
         executorService.execute(() -> projectDao.insertUserSkills(skills));
     }
 
+    public void insertStudentProfile(UserEntity student, List<UserSkillEntity> skills) {
+        executorService.execute(() -> projectDao.insertStudentProfile(student, skills));
+    }
+
     public void replaceGeneratedTeams(List<TeamEntity> teams, List<TeamUserCrossRef> refs) {
         executorService.execute(() -> projectDao.replaceTeams(teams, refs));
+    }
+
+    public void deleteAllTeams() {
+        executorService.execute(() -> {
+            projectDao.deleteAllTeamMemberships();
+            projectDao.deleteAllTeams();
+        });
     }
 
     public void shutdown() {

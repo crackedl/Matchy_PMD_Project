@@ -25,193 +25,294 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/studentCountText"
+            android:id="@+id/subtitleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:text="@string/screen_subtitle"
             android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            tools:text="22 students ready" />
-
-        <TextView
-            android:id="@+id/studentsSectionTitle"
-            style="@style/SectionTitle"
-            android:text="@string/students_title" />
+            android:textSize="14sp" />
 
         <LinearLayout
-            android:id="@+id/studentEntryPanel"
+            android:id="@+id/roleChoicePanel"
             style="@style/PanelContainer"
+            android:layout_marginTop="24dp"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/studentNameLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/student_name">
+                android:text="@string/choose_role"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/studentNameEditText"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/studentModeButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
+                android:text="@string/student_mode"
+                app:cornerRadius="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/professorModeButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/professor_mode"
+                app:cornerRadius="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/studentScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/studentBackButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/change_role" />
+
+            <TextView
+                style="@style/SectionTitle"
+                android:text="@string/student_account_title" />
+
+            <LinearLayout
+                android:id="@+id/studentEntryPanel"
+                style="@style/PanelContainer"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/studentNameLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPersonName" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="@string/student_name">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/studentEmailLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/studentNameEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/studentEmailLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/student_email">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/studentEmailEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/skill_scores"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/studentSkillsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveStudentProfileButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/save_student_profile"
+                    app:cornerRadius="8dp" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionTitle"
+                android:text="@string/my_team_title" />
+
+            <TextView
+                android:id="@+id/studentAssignedTeamText"
+                style="@style/PanelContainer"
+                android:text="@string/not_assigned_yet"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/professorScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/professorBackButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/change_role" />
+
+            <TextView
+                android:id="@+id/studentCountText"
+                style="@style/SectionTitle"
+                android:text="@string/students_title" />
+
+            <TextView
+                android:id="@+id/studentListEmptyText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="18dp"
+                android:text="@string/empty_students"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/studentsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:hint="@string/student_email">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/studentEmailEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionDone"
-                    android:inputType="textEmailAddress" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/addStudentButton"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
-                android:text="@string/add_student"
-                app:cornerRadius="8dp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/studentListEmptyText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:padding="18dp"
-            android:text="@string/empty_students"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/studentsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:nestedScrollingEnabled="false"
-            tools:itemCount="3"
-            tools:listitem="@layout/item_student" />
-
-        <TextView
-            android:id="@+id/generationSectionTitle"
-            style="@style/SectionTitle"
-            android:text="@string/generation_title" />
-
-        <LinearLayout
-            android:id="@+id/generationPanel"
-            style="@style/PanelContainer"
-            android:orientation="vertical">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/teamSizeLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/target_team_size">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/teamSizeEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:text="5" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_student" />
 
             <TextView
-                android:id="@+id/criteriaLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="@string/sorting_criteria"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                style="@style/SectionTitle"
+                android:text="@string/generation_title" />
 
-            <Spinner
-                android:id="@+id/criteriaSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="6dp"
-                android:backgroundTint="@color/border"
-                android:entries="@array/skill_criteria_options" />
+            <LinearLayout
+                android:id="@+id/generationPanel"
+                style="@style/PanelContainer"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/teamSizeLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/target_team_size">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/teamSizeEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="5" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/criteriaLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/sorting_criteria"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/criteriaSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="6dp"
+                    android:entries="@array/skill_criteria_options" />
+
+                <TextView
+                    android:id="@+id/strategyLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/strategy"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <RadioGroup
+                    android:id="@+id/strategyRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:checkedButton="@id/balancedRadioButton"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/homogeneousRadioButton"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="@string/homogeneous"
+                        android:textColor="@color/text_primary" />
+
+                    <RadioButton
+                        android:id="@+id/balancedRadioButton"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="@string/balanced"
+                        android:textColor="@color/text_primary" />
+                </RadioGroup>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/generateTeamsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/generate_teams"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deleteTeamsButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/delete_all_teams"
+                    app:cornerRadius="8dp" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/strategyLabel"
+                style="@style/SectionTitle"
+                android:text="@string/results_title" />
+
+            <TextView
+                android:id="@+id/teamListEmptyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="@string/strategy"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:gravity="center"
+                android:padding="18dp"
+                android:text="@string/empty_teams"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
 
-            <RadioGroup
-                android:id="@+id/strategyRadioGroup"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/teamsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:checkedButton="@id/balancedRadioButton"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/homogeneousRadioButton"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:text="@string/homogeneous"
-                    android:textColor="@color/text_primary" />
-
-                <RadioButton
-                    android:id="@+id/balancedRadioButton"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:text="@string/balanced"
-                    android:textColor="@color/text_primary" />
-            </RadioGroup>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/generateTeamsButton"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
-                android:text="@string/generate_teams"
-                app:backgroundTint="@color/primary"
-                app:cornerRadius="8dp" />
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_team" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/resultsSectionTitle"
-            style="@style/SectionTitle"
-            android:text="@string/results_title" />
-
-        <TextView
-            android:id="@+id/teamListEmptyText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="18dp"
-            android:text="@string/empty_teams"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/teamsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            tools:itemCount="4"
-            tools:listitem="@layout/item_team" />
     </LinearLayout>
 </ScrollView>
