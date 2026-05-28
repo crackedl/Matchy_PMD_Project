@@ -7,12 +7,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.matchy_team_generator.data.TeamWithMembers;
 import com.example.matchy_team_generator.data.UserEntity;
@@ -42,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private List<UserEntity> currentStudents = new ArrayList<>();
     private List<UserSkillEntity> currentSkills = new ArrayList<>();
     private List<TeamWithMembers> currentTeams = new ArrayList<>();
-    private String currentStudentId;
     private boolean seedRequested;
 
     @Override
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         binding.studentBackButton.setOnClickListener(v -> showRoleChoice());
         binding.professorBackButton.setOnClickListener(v -> showRoleChoice());
         binding.saveStudentProfileButton.setOnClickListener(v -> saveStudentProfile());
+        binding.viewAllStudentsButton.setOnClickListener(v -> showAllStudentsDialog());
         binding.generateTeamsButton.setOnClickListener(v -> generateTeams());
         binding.deleteTeamsButton.setOnClickListener(v -> {
             viewModel.deleteAllTeams();
@@ -116,13 +118,13 @@ public class MainActivity extends AppCompatActivity {
             binding.studentCountText.setText(String.format(Locale.US, "Students (%d)", currentStudents.size()));
             binding.studentListEmptyText.setVisibility(currentStudents.isEmpty() ? View.VISIBLE : View.GONE);
             binding.studentsRecyclerView.setVisibility(currentStudents.isEmpty() ? View.GONE : View.VISIBLE);
-            studentAdapter.submit(currentStudents, skillsByUser);
+            studentAdapter.submit(sampleStudents(), skillsByUser);
         });
 
         viewModel.allSkills.observe(this, skills -> {
             currentSkills = skills == null ? new ArrayList<>() : skills;
             rebuildSkillMap();
-            studentAdapter.submit(currentStudents, skillsByUser);
+            studentAdapter.submit(sampleStudents(), skillsByUser);
         });
 
         viewModel.teams.observe(this, teams -> {
@@ -130,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
             binding.teamListEmptyText.setVisibility(currentTeams.isEmpty() ? View.VISIBLE : View.GONE);
             binding.teamsRecyclerView.setVisibility(currentTeams.isEmpty() ? View.GONE : View.VISIBLE);
             teamAdapter.submit(currentTeams);
-            updateStudentAssignedTeam();
         });
     }
 
@@ -145,14 +146,14 @@ public class MainActivity extends AppCompatActivity {
         binding.roleChoicePanel.setVisibility(View.GONE);
         binding.studentScreen.setVisibility(View.VISIBLE);
         binding.professorScreen.setVisibility(View.GONE);
-        binding.subtitleText.setText("Create or update your student profile.");
+        binding.subtitleText.setText("Add one student account with skill scores.");
     }
 
     private void showProfessorScreen() {
         binding.roleChoicePanel.setVisibility(View.GONE);
         binding.studentScreen.setVisibility(View.GONE);
         binding.professorScreen.setVisibility(View.VISIBLE);
-        binding.subtitleText.setText("Review students, generate teams, or clear existing teams.");
+        binding.subtitleText.setText("Review a sample, generate teams, or open the full student list.");
     }
 
     private void saveStudentProfile() {
@@ -179,9 +180,9 @@ public class MainActivity extends AppCompatActivity {
             skillValues.put(skill, value);
         }
 
-        currentStudentId = viewModel.registerStudent(name, email, skillValues);
-        updateStudentAssignedTeam();
-        Toast.makeText(this, "Student profile saved", Toast.LENGTH_SHORT).show();
+        viewModel.registerStudent(name, email, skillValues);
+        clearStudentForm();
+        Toast.makeText(this, "Student added", Toast.LENGTH_SHORT).show();
     }
 
     private void generateTeams() {
@@ -205,36 +206,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Teams generated", Toast.LENGTH_SHORT).show();
     }
 
-    private void updateStudentAssignedTeam() {
-        if (currentStudentId == null) {
-            binding.studentAssignedTeamText.setText(R.string.not_assigned_yet);
-            return;
-        }
-        for (TeamWithMembers team : currentTeams) {
-            if (team.members == null) {
-                continue;
-            }
-            for (UserEntity member : team.members) {
-                if (currentStudentId.equals(member.id)) {
-                    binding.studentAssignedTeamText.setText(formatStudentTeam(team));
-                    return;
-                }
-            }
-        }
-        binding.studentAssignedTeamText.setText("Your profile is saved. No team has been assigned yet.");
-    }
-
-    private String formatStudentTeam(TeamWithMembers team) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(team.team.teamName).append("\n");
-        builder.append(team.team.strategyUsed).append(" | ").append(team.team.criteriaUsed).append("\n\n");
-        builder.append("Members:\n");
-        for (UserEntity member : team.members) {
-            builder.append(member.name).append(" <").append(member.email).append(">\n");
-        }
-        return builder.toString().trim();
-    }
-
     private void rebuildSkillMap() {
         skillsByUser.clear();
         for (UserSkillEntity skill : currentSkills) {
@@ -244,6 +215,39 @@ public class MainActivity extends AppCompatActivity {
                 skillsByUser.put(skill.userId, userSkills);
             }
             userSkills.put(skill.skillName, skill.proficiencyLevel);
+        }
+    }
+
+    private List<UserEntity> sampleStudents() {
+        int sampleSize = Math.min(8, currentStudents.size());
+        return new ArrayList<>(currentStudents.subList(0, sampleSize));
+    }
+
+    private void showAllStudentsDialog() {
+        RecyclerView recyclerView = new RecyclerView(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp(520)
+        );
+        recyclerView.setLayoutParams(params);
+
+        StudentAdapter dialogAdapter = new StudentAdapter();
+        recyclerView.setAdapter(dialogAdapter);
+        dialogAdapter.submit(currentStudents, skillsByUser);
+
+        new AlertDialog.Builder(this)
+                .setTitle(String.format(Locale.US, "All Students (%d)", currentStudents.size()))
+                .setView(recyclerView)
+                .setPositiveButton("Close", null)
+                .show();
+    }
+
+    private void clearStudentForm() {
+        binding.studentNameEditText.setText("");
+        binding.studentEmailEditText.setText("");
+        for (TextInputEditText input : skillInputs.values()) {
+            input.setText("3");
         }
     }
 

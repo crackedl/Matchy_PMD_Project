@@ -146,16 +146,6 @@
                     app:cornerRadius="8dp" />
             </LinearLayout>
 
-            <TextView
-                style="@style/SectionTitle"
-                android:text="@string/my_team_title" />
-
-            <TextView
-                android:id="@+id/studentAssignedTeamText"
-                style="@style/PanelContainer"
-                android:text="@string/not_assigned_yet"
-                android:textColor="@color/text_primary"
-                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -187,6 +177,15 @@
                 android:text="@string/empty_students"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewAllStudentsButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/view_all_students"
+                app:cornerRadius="8dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/studentsRecyclerView"
