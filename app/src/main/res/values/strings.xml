@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Matchy_Team_Generator</string>
+    <string name="screen_title">Smart Team Generator</string>
+    <string name="students_title">Students</string>
+    <string name="generation_title">Generation Settings</string>
+    <string name="results_title">Generated Teams</string>
+    <string name="student_name">Student name</string>
+    <string name="student_email">Student email</string>
+    <string name="add_student">Add student</string>
+    <string name="target_team_size">Target team size</string>
+    <string name="sorting_criteria">Sorting criteria</string>
+    <string name="strategy">Strategy</string>
+    <string name="homogeneous">Homogeneous</string>
+    <string name="balanced">Balanced</string>
+    <string name="generate_teams">Generate teams</string>
+    <string name="empty_students">No students added yet.</string>
+    <string name="empty_teams">No teams generated yet.</string>
 </resources>

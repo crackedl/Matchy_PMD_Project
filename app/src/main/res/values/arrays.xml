@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="skill_criteria_options">
+        <item>OVERALL_AVERAGE</item>
+        <item>PROGRAMMING_LANGUAGES</item>
+        <item>SYSTEM_SECURITY</item>
+        <item>HARDWARE_INFRASTRUCTURE</item>
+        <item>NETWORK_ARCHITECTURE</item>
+        <item>ALGORITHMIC_THINKING</item>
+        <item>MATHEMATICS</item>
+        <item>PHYSICS</item>
+        <item>DATA_SCIENCE_STATISTICS</item>
+        <item>TEAM_COLLABORATION</item>
+        <item>CRITICAL_THINKING</item>
+        <item>ADAPTABILITY</item>
+        <item>TIME_MANAGEMENT</item>
+    </string-array>
+</resources>
