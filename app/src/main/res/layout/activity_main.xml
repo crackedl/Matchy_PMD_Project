@@ -305,6 +305,15 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewAllTeamsButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/view_all_teams"
+                app:cornerRadius="8dp" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/teamsRecyclerView"
                 android:layout_width="match_parent"

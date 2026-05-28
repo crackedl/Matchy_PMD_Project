@@ -5,7 +5,7 @@
     <string name="choose_role">What do you want to do?</string>
     <string name="student_mode">Add Student</string>
     <string name="professor_mode">Professor Dashboard</string>
-    <string name="change_role">Change role</string>
+    <string name="change_role">Go back</string>
     <string name="students_title">Students</string>
     <string name="student_account_title">Add Student</string>
     <string name="generation_title">Generation Settings</string>
@@ -16,6 +16,7 @@
     <string name="save_student_profile">Add student</string>
     <string name="skill_scores">Skill scores from 1 to 5</string>
     <string name="view_all_students">View all students and skills</string>
+    <string name="view_all_teams">View all generated teams</string>
     <string name="target_team_size">Target team size</string>
     <string name="sorting_criteria">Sorting criteria</string>
     <string name="strategy">Strategy</string>

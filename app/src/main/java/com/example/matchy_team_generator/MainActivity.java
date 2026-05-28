@@ -1,7 +1,9 @@
 package com.example.matchy_team_generator;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -100,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         binding.professorBackButton.setOnClickListener(v -> showRoleChoice());
         binding.saveStudentProfileButton.setOnClickListener(v -> saveStudentProfile());
         binding.viewAllStudentsButton.setOnClickListener(v -> showAllStudentsDialog());
+        binding.viewAllTeamsButton.setOnClickListener(v -> showAllTeamsDialog());
         binding.generateTeamsButton.setOnClickListener(v -> generateTeams());
         binding.deleteTeamsButton.setOnClickListener(v -> {
             viewModel.deleteAllTeams();
@@ -131,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
             currentTeams = teams == null ? new ArrayList<>() : teams;
             binding.teamListEmptyText.setVisibility(currentTeams.isEmpty() ? View.VISIBLE : View.GONE);
             binding.teamsRecyclerView.setVisibility(currentTeams.isEmpty() ? View.GONE : View.VISIBLE);
-            teamAdapter.submit(currentTeams);
+            binding.viewAllTeamsButton.setVisibility(currentTeams.isEmpty() ? View.GONE : View.VISIBLE);
+            teamAdapter.submit(sampleTeams());
         });
     }
 
@@ -223,24 +227,167 @@ public class MainActivity extends AppCompatActivity {
         return new ArrayList<>(currentStudents.subList(0, sampleSize));
     }
 
+    private List<TeamWithMembers> sampleTeams() {
+        int sampleSize = Math.min(4, currentTeams.size());
+        return new ArrayList<>(currentTeams.subList(0, sampleSize));
+    }
+
     private void showAllStudentsDialog() {
+        LinearLayout content = dialogContent();
+        TextInputEditText searchInput = addSearchInput(content, "Search students or skills");
         RecyclerView recyclerView = new RecyclerView(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                dp(520)
-        );
-        recyclerView.setLayoutParams(params);
+        content.addView(recyclerView, recyclerParams());
 
         StudentAdapter dialogAdapter = new StudentAdapter();
         recyclerView.setAdapter(dialogAdapter);
         dialogAdapter.submit(currentStudents, skillsByUser);
+        searchInput.addTextChangedListener(simpleTextWatcher(text -> dialogAdapter.submit(filterStudents(text), skillsByUser)));
 
         new AlertDialog.Builder(this)
                 .setTitle(String.format(Locale.US, "All Students (%d)", currentStudents.size()))
-                .setView(recyclerView)
+                .setView(content)
                 .setPositiveButton("Close", null)
                 .show();
+    }
+
+    private void showAllTeamsDialog() {
+        LinearLayout content = dialogContent();
+        TextInputEditText searchInput = addSearchInput(content, "Search teams or members");
+        RecyclerView recyclerView = new RecyclerView(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        content.addView(recyclerView, recyclerParams());
+
+        TeamAdapter dialogAdapter = new TeamAdapter();
+        recyclerView.setAdapter(dialogAdapter);
+        dialogAdapter.submit(currentTeams);
+        searchInput.addTextChangedListener(simpleTextWatcher(text -> dialogAdapter.submit(filterTeams(text))));
+
+        new AlertDialog.Builder(this)
+                .setTitle(String.format(Locale.US, "Generated Teams (%d)", currentTeams.size()))
+                .setView(content)
+                .setPositiveButton("Close", null)
+                .show();
+    }
+
+    private LinearLayout dialogContent() {
+        LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
+        content.setPadding(dp(4), dp(4), dp(4), 0);
+        return content;
+    }
+
+    private TextInputEditText addSearchInput(LinearLayout content, String hint) {
+        TextInputLayout searchLayout = new TextInputLayout(this);
+        searchLayout.setHint(hint);
+        TextInputEditText searchInput = new TextInputEditText(searchLayout.getContext());
+        searchInput.setSingleLine(true);
+        searchInput.setInputType(InputType.TYPE_CLASS_TEXT);
+        searchLayout.addView(searchInput);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 0, 0, dp(10));
+        content.addView(searchLayout, params);
+        return searchInput;
+    }
+
+    private LinearLayout.LayoutParams recyclerParams() {
+        return new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp(520)
+        );
+    }
+
+    private TextWatcher simpleTextWatcher(SearchHandler handler) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                handler.onSearch(s == null ? "" : s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+    }
+
+    private List<UserEntity> filterStudents(String query) {
+        String normalized = query.trim().toLowerCase(Locale.US);
+        if (normalized.isEmpty()) {
+            return currentStudents;
+        }
+
+        List<UserEntity> filtered = new ArrayList<>();
+        for (UserEntity student : currentStudents) {
+            if (studentMatches(student, normalized)) {
+                filtered.add(student);
+            }
+        }
+        return filtered;
+    }
+
+    private boolean studentMatches(UserEntity student, String query) {
+        if (student.name.toLowerCase(Locale.US).contains(query)
+                || student.email.toLowerCase(Locale.US).contains(query)) {
+            return true;
+        }
+
+        Map<String, Integer> skills = skillsByUser.get(student.id);
+        if (skills == null) {
+            return false;
+        }
+        for (Map.Entry<String, Integer> entry : skills.entrySet()) {
+            String skillText = label(entry.getKey()).toLowerCase(Locale.US) + " " + entry.getValue();
+            if (skillText.contains(query) || entry.getKey().toLowerCase(Locale.US).contains(query)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<TeamWithMembers> filterTeams(String query) {
+        String normalized = query.trim().toLowerCase(Locale.US);
+        if (normalized.isEmpty()) {
+            return currentTeams;
+        }
+
+        List<TeamWithMembers> filtered = new ArrayList<>();
+        for (TeamWithMembers team : currentTeams) {
+            if (teamMatches(team, normalized)) {
+                filtered.add(team);
+            }
+        }
+        return filtered;
+    }
+
+    private boolean teamMatches(TeamWithMembers team, String query) {
+        String teamText = (team.team.teamName + " "
+                + team.team.strategyUsed + " "
+                + team.team.criteriaUsed).toLowerCase(Locale.US);
+        if (teamText.contains(query)) {
+            return true;
+        }
+        if (team.members == null) {
+            return false;
+        }
+        for (UserEntity member : team.members) {
+            String memberText = (member.name + " " + member.email).toLowerCase(Locale.US);
+            if (memberText.contains(query)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private interface SearchHandler {
+        void onSearch(String query);
     }
 
     private void clearStudentForm() {
