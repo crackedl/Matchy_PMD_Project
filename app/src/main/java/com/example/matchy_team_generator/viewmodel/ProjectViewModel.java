@@ -12,6 +12,7 @@ import com.example.matchy_team_generator.data.UserSkillEntity;
 import com.example.matchy_team_generator.model.GenerationStrategy;
 import com.example.matchy_team_generator.model.Role;
 import com.example.matchy_team_generator.repository.ProjectRepository;
+import com.example.matchy_team_generator.util.DemoDataSeeder;
 import com.example.matchy_team_generator.util.TeamGeneratorHelper;
 
 import java.util.ArrayList;
@@ -53,6 +54,11 @@ public class ProjectViewModel extends AndroidViewModel {
                 strategy
         );
         repository.replaceGeneratedTeams(generated.teams, generated.teamMembers);
+    }
+
+    public void seedDemoStudents(int count) {
+        DemoDataSeeder.DemoStudents demoStudents = DemoDataSeeder.createStudents(count);
+        repository.insertStudentProfiles(demoStudents.students, demoStudents.skills);
     }
 
     public void deleteAllTeams() {

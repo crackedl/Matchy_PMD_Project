@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private List<UserSkillEntity> currentSkills = new ArrayList<>();
     private List<TeamWithMembers> currentTeams = new ArrayList<>();
     private String currentStudentId;
+    private boolean seedRequested;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
     private void observeData() {
         viewModel.students.observe(this, students -> {
             currentStudents = students == null ? new ArrayList<>() : students;
+            if (currentStudents.size() < 120 && !seedRequested) {
+                seedRequested = true;
+                viewModel.seedDemoStudents(120);
+                Toast.makeText(this, "Loading 120 demo students", Toast.LENGTH_SHORT).show();
+            }
             binding.studentCountText.setText(String.format(Locale.US, "Students (%d)", currentStudents.size()));
             binding.studentListEmptyText.setVisibility(currentStudents.isEmpty() ? View.VISIBLE : View.GONE);
             binding.studentsRecyclerView.setVisibility(currentStudents.isEmpty() ? View.GONE : View.VISIBLE);

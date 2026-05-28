@@ -66,6 +66,12 @@ public interface ProjectDao {
     }
 
     @Transaction
+    default void insertStudentProfiles(List<UserEntity> students, List<UserSkillEntity> skills) {
+        insertUsers(students);
+        insertUserSkills(skills);
+    }
+
+    @Transaction
     default void replaceTeams(List<TeamEntity> teams, List<TeamUserCrossRef> refs) {
         deleteAllTeamMemberships();
         deleteAllTeams();
